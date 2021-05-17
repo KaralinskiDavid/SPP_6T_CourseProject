@@ -1,0 +1,53 @@
+<div class="mat-elevation-z8">
+  <mat-slide-toggle id="slider" class="example-margin"
+                    [color]="color"
+                    [checked]="checked"
+                    [disabled]="disabled">
+    My subgroup only
+  </mat-slide-toggle>
+  <mdb-icon fas icon="sync" id="sync"></mdb-icon>
+  <mat-form-field id="dateInput">
+    <input matInput [matDatepicker]="dp3" placeholder="Input disabled" disabled  [(ngModel)]="selectedDate" (dateChange)="selectedDateChanged()">
+    <mat-datepicker-toggle matSuffix [for]="dp3"></mat-datepicker-toggle>
+    <mat-datepicker #dp3 disabled="false"></mat-datepicker>
+  </mat-form-field>
+  <table mat-table [dataSource]="dataSource">
+
+    <!-- Position Column -->
+    <ng-container matColumnDef="subject">
+      <th mat-header-cell *matHeaderCellDef> Subject </th>
+      <td mat-cell *matCellDef="let element" [style.background-color]="element.lessonType?.name=='ПЗ' ? '#d1bd26' : element.lessonType?.name=='ЛР' ? '#a3240d' : '#368c20'"> {{element.subjectName}} </td>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="subGroup">
+      <th mat-header-cell *matHeaderCellDef> Subgroup </th>
+      <td mat-cell *matCellDef="let element" [style.background-color]="element.lessonType?.name=='ПЗ' ? '#d1bd26' : element.lessonType?.name=='ЛР' ? '#a3240d' : '#368c20'"> {{element.subGroup!=0 ? element.subGroup : '-'}} </td>
+    </ng-container>
+
+    <!-- Weight Column -->
+    <ng-container matColumnDef="time">
+      <th mat-header-cell *matHeaderCellDef> Time </th>
+      <td mat-cell *matCellDef="let element" [style.background-color]="element.lessonType?.name=='ПЗ' ? '#d1bd26' : element.lessonType?.name=='ЛР' ? '#a3240d' : '#368c20'"> {{element.lessonTime}} </td>
+    </ng-container>
+
+    <!-- Symbol Column -->
+    <ng-container matColumnDef="auditory">
+      <th mat-header-cell *matHeaderCellDef> Auditory </th>
+      <td mat-cell *matCellDef="let element" [style.background-color]="element.lessonType?.name=='ПЗ' ? '#d1bd26' : element.lessonType?.name=='ЛР' ? '#a3240d' : '#368c20'"> {{element.auditory}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="lessonType">
+      <th mat-header-cell *matHeaderCellDef> Type </th>
+      <td mat-cell *matCellDef="let element" [style.background-color]="element.lessonType?.name=='ПЗ' ? '#d1bd26' : element.lessonType?.name=='ЛР' ? '#a3240d' : '#368c20'"> {{element.lessonType?.name}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="queues">
+      <th mat-header-cell *matHeaderCellDef> Queues </th>
+      <td mat-cell *matCellDef="let element" [style.background-color]="element.lessonType?.name=='ПЗ' ? '#d1bd26' : element.lessonType?.name=='ЛР' ? '#a3240d' : '#368c20'"> </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>

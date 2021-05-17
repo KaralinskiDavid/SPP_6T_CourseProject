@@ -1,0 +1,21 @@
+table {
+  width: 100%;
+  margin-bottom:3vh;
+}
+
+#dateInput{
+    margin-top: 1.5vh;
+    float: right;
+    margin-right: 1vw;
+}
+
+#slider{
+    float:left;
+    margin-top:3.1vh;
+    margin-left: 1vw;
+}
+
+#sync {
+  margin-top: 3.3vh;
+  margin-left: 30%;
+}

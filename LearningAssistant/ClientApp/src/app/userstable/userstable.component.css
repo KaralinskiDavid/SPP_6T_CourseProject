@@ -1,0 +1,8 @@
+table {
+  width: 100%;
+}
+
+mdb-icon:hover {
+  color: #0090FD;
+  cursor: pointer;
+}

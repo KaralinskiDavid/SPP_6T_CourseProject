@@ -1,0 +1,38 @@
+<div class="mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource">
+
+    <!-- Position Column -->
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef> Name </th>
+      <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="faculty">
+      <th mat-header-cell *matHeaderCellDef> Faculty </th>
+      <td mat-cell *matCellDef="let element"> {{element.faculty}} </td>
+    </ng-container>
+
+    <!-- Weight Column -->
+    <ng-container matColumnDef="headman">
+      <th mat-header-cell *matHeaderCellDef> Headman </th>
+      <td mat-cell *matCellDef="let element"> {{element.headman}} </td>
+    </ng-container>
+
+    <!-- Symbol Column -->
+    <ng-container matColumnDef="speciality">
+      <th mat-header-cell *matHeaderCellDef> Speciality </th>
+      <td mat-cell *matCellDef="let element"> {{element.speciality}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="groupsCount">
+      <th mat-header-cell *matHeaderCellDef> Groups count </th>
+      <td mat-cell *matCellDef="let element"> {{element.groupsCount}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+</div>
