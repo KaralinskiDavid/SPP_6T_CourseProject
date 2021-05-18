@@ -12,6 +12,7 @@ import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { AddUserModal } from './add-user-modal/add-user-modal.component';
+import { EditUserModalComponent } from './edit-user-modal/edit-user-modal.component';
 import { ScheduleTableComponent } from './schedule-table/schedule-table.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material';
@@ -19,6 +20,11 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSelectModule } from '@angular/material/select';
 import { ErrorInterceptor } from './helpers/error.interceptor';
 import { ConfirmDeleteModalComponent } from './confirm-delete-modal/confirm-delete-modal.component';
+import { QueueEditorComponent } from './queue-editor/queue-editor.component';
+import { MatButtonModule } from '@angular/material/button';
+import { AddQueueModalComponent } from './add-queue-modal/add-queue-modal.component';
+import { MatListModule } from '@angular/material/list';
+import { UserTabsComponent } from './user-tabs/user-tabs.component';
 
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
@@ -32,8 +38,19 @@ import { SpecialitiestableComponent } from './specialitiestable/specialitiestabl
 import { GroupstableComponent } from './groupstable/groupstable.component';
 import { AdminTabsComponent } from './admin-tabs/admin-tabs.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { CDK_DRAG_CONFIG, DragDropModule } from '@angular/cdk/drag-drop';
+
+const DragConfig = {
+  dragStartThreshold: 0,
+  pointerDirectionChangeThreshold: 5,
+  zIndex: 10000
+};
 
 const appRoutes: Routes = [
+  {
+    path: '',
+    component: LoginComponent,
+  },
   {
     path: 'login',
     component: LoginComponent,
@@ -43,20 +60,12 @@ const appRoutes: Routes = [
     component: RegisterComponent,
   },
   {
-  path: "userstable",
-  component: UserstableComponent,
-  },
-  {
-    path: "specialitiestable",
-    component: SpecialitiestableComponent,
-  },
-  {
-    path: "schedulestable",
-    component: ScheduleTableComponent,
-  },
-  {
-    path: "adminTabs",
+    path: "admin",
     component: AdminTabsComponent,
+  },
+  {
+    path: "user",
+    component: UserTabsComponent,
   },
 ];
 
@@ -76,6 +85,10 @@ const appRoutes: Routes = [
     AddUserModal,
     ScheduleTableComponent,
     ConfirmDeleteModalComponent,
+    QueueEditorComponent,
+    EditUserModalComponent,
+    AddQueueModalComponent,
+    UserTabsComponent,
   ],
   imports: [
     BrowserModule,
@@ -99,9 +112,12 @@ const appRoutes: Routes = [
     MatNativeDateModule,
     MatSlideToggleModule,
     MatSelectModule,
+    DragDropModule,
+    MatButtonModule,
+    MatListModule,
   ],
-  providers: [{ provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }],
-  entryComponents: [AddUserModal, ConfirmDeleteModalComponent],
+  providers: [{ provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }, { provide: CDK_DRAG_CONFIG, useValue: DragConfig }],
+  entryComponents: [AddUserModal, ConfirmDeleteModalComponent, EditUserModalComponent, AddQueueModalComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

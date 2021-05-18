@@ -16,5 +16,6 @@ namespace Domain.Impl.Models
         public string WeekNumber { get; set; }
 
         public  LessonTypeModel LessonType { get; set; }
+        public  List<QueueModel> Queues { get; set; }
     }
 }

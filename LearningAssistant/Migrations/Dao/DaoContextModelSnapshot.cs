@@ -136,6 +136,32 @@ namespace LearningAssistant.Migrations.Dao
                     b.ToTable("LessonTypes");
                 });
 
+            modelBuilder.Entity("Dao.Impl.DaoModels.Queue", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Date")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("LessonId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("StudentIds")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SubGroup")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LessonId");
+
+                    b.ToTable("Queues");
+                });
+
             modelBuilder.Entity("Dao.Impl.DaoModels.RefreshToken", b =>
                 {
                     b.Property<Guid>("Id")
@@ -284,6 +310,17 @@ namespace LearningAssistant.Migrations.Dao
                     b.Navigation("LessonType");
                 });
 
+            modelBuilder.Entity("Dao.Impl.DaoModels.Queue", b =>
+                {
+                    b.HasOne("Dao.Impl.DaoModels.Lesson", "Lesson")
+                        .WithMany("Queues")
+                        .HasForeignKey("LessonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Lesson");
+                });
+
             modelBuilder.Entity("Dao.Impl.DaoModels.Schedule", b =>
                 {
                     b.HasOne("Dao.Impl.DaoModels.Group", "Group")
@@ -338,6 +375,11 @@ namespace LearningAssistant.Migrations.Dao
                     b.Navigation("Schedule");
 
                     b.Navigation("Students");
+                });
+
+            modelBuilder.Entity("Dao.Impl.DaoModels.Lesson", b =>
+                {
+                    b.Navigation("Queues");
                 });
 
             modelBuilder.Entity("Dao.Impl.DaoModels.Schedule", b =>

@@ -8,6 +8,9 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AddUserModal } from '../add-user-modal/add-user-modal.component';
 import { ConfirmDeleteModalComponent } from '../confirm-delete-modal/confirm-delete-modal.component';
 import { UserService } from '../services/user.service';
+import { AuthService } from '../services/auth.service';
+import { EditUserModalComponent } from '../edit-user-modal/edit-user-modal.component';
+import { User } from '../classes/user';
 
 @Component({
   selector: 'app-userstable',
@@ -22,9 +25,13 @@ export class UserstableComponent implements OnInit {
 
   @ViewChild(MatPaginator, {static:false}) paginator: MatPaginator;
 
-  constructor(private studentService: StudentService, private _userService: UserService, private toastr: ToastrService, private _modalService: NgbModal) { }
+  constructor(private studentService: StudentService, private _userService: UserService, private _authService: AuthService, private toastr: ToastrService, private _modalService: NgbModal) { }
 
   ngOnInit(): void {
+    this.loadStudents();
+  }
+
+  loadStudents() {
     this.studentService.getStudents().subscribe((result: any) => {
       this.students = result;
       this.dataSource = new MatTableDataSource<Student>(this.students);
@@ -65,15 +72,49 @@ export class UserstableComponent implements OnInit {
 
   onCreateClicked() {
     const modalRef = this._modalService.open(AddUserModal);
-    modalRef.result.then((result) => {
-      if (result == "Ok") {
-        var createdUser = modalRef.componentInstance.createdUser;
-        //createdTask.taskStatus = this.statuses[modalRef.componentInstance.statusIndex];
-        //this.createTaskHub(createdTask);
-        //this.createTask(createdTask, modalRef.componentInstance.addedFiles);
-        //this.createTaskGraphql(createdTask, modalRef.componentInstance.addedFiles);
+     modalRef.result.then((result) => {
+      if (result.email!=null) {
+        this._authService.signUp(result).subscribe((result: boolean) => {
+          if (result) {
+            this.toastr.success("Created");
+            this.loadStudents();
+          }
+          else
+            this.toastr.error("Something went wrong");
+        },
+          error => { this.toastr.error("Something went wrong"); }
+        )
       };
-    });
+     }).catch((res) => { });
+  }
+
+  onEditClicked(student: Student) {
+    const modalRef = this._modalService.open(EditUserModalComponent);
+    let user = new User();
+
+    user.email = student.userEmail;
+    user.firstName = student.userFirstName;
+    user.lastName = student.userLastName;
+    user.middleName = user.middleName;
+    user.groupNumber = student.group.number;
+    user.roleName = student.roleName;
+    user.subGroup = student.subgroup;
+
+    modalRef.componentInstance.editedUser = user;
+    modalRef.result.then((result) => {
+      if (result.email != null) {
+        this._userService.updateUser(student.userId, user).subscribe((result: boolean) => {
+          if (result) {
+            this.toastr.success("Updated");
+            this.loadStudents();
+          }
+          else
+            this.toastr.error("Something went wrong");
+        },
+          error => { this.toastr.error("Something went wrong"); }
+        )
+      };
+    }).catch((res) => { });
   }
 
 }

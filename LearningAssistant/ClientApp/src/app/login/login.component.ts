@@ -55,6 +55,12 @@ export class LoginComponent implements OnInit {
       localStorage.setItem('email', result['email']);
       localStorage.setItem('userName', result['userName']);
       localStorage.setItem('role', result['role']);
+      localStorage.setItem('groupNumber', result['groupNumber']);
+      localStorage.setItem('subGroup', result['subGroup']);
+      if (result['role'] != "Admin")
+        this.router.navigate(['/user']);
+      else
+        this.router.navigate(['/admin']);
     },
       error => {
         this.toastr.error("Wrong email or password");

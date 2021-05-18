@@ -12,6 +12,6 @@ namespace Dao.Impl
 
         public override async Task<Student> GetItemByIdAsync(int id) => await _context.Students.FirstOrDefaultAsync(i => i.Id == id);
 
-        public async Task<Student> GetStudentByUserId(string userId) => await _context.Students.FirstOrDefaultAsync(i => i.UserId == userId);
+        public async Task<Student> GetStudentByUserId(string userId) => await _context.Students.Include(s=>s.Group).FirstOrDefaultAsync(i => i.UserId == userId);
     }
 }

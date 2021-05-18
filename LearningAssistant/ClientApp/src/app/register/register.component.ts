@@ -95,8 +95,8 @@ export class RegisterComponent implements OnInit {
         this.duplicateName = result;
         if (result)
           this.emailFormControl.setErrors({ incorrect: true });
-        else
-          this.emailFormControl.setErrors(null);
+        else if(this.emailFormControl.invalid)
+          this.emailFormControl.errors['incorrect']=null;
       });
     }
   }

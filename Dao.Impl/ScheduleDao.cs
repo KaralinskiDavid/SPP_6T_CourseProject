@@ -13,7 +13,9 @@ namespace Dao.Impl
 
         public override Task<Schedule> GetItemByIdAsync(int id) => throw new NotImplementedException();
 
-        public async Task<Schedule> GetScheduleByGroupId(int groupId) => await _context.Schedules.Include(s=>s.DaySchedules).
-            ThenInclude(ds=>ds.Lessons).ThenInclude(l=>l.LessonType).FirstOrDefaultAsync(s => s.GroupId == groupId);
+        public async Task<Schedule> GetScheduleByGroupId(int groupId) => await _context.Schedules
+            .Include(s=>s.DaySchedules).ThenInclude(ds=>ds.Lessons).ThenInclude(l=>l.LessonType)
+            .Include(s => s.DaySchedules).ThenInclude(ds => ds.Lessons).ThenInclude(l => l.Queues)
+            .FirstOrDefaultAsync(s => s.GroupId == groupId);
     }
 }

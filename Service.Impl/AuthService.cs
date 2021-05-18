@@ -24,11 +24,13 @@ namespace Service.Impl
         private readonly UserManager<LearningAssistantUser> _userManager;
         private readonly IStudentDao<Student> _studentDao;
         private readonly IGroupDao<Group> _groupDao;
+        private readonly ISpecialityDao<Speciality> _specialityDao;
         private readonly IRefreshTokenDao<RefreshToken> _refreshTokenDao;
         private readonly IMapper _mapper;
 
         public AuthService(IOptions<JwtOptions> jwtOptions, UserManager<LearningAssistantUser> userManager, 
-            IStudentDao<Student> studentDao, IGroupDao<Group> groupDao, IMapper mapper, IRefreshTokenDao<RefreshToken> refreshTokenDao)
+            IStudentDao<Student> studentDao, IGroupDao<Group> groupDao, IMapper mapper, IRefreshTokenDao<RefreshToken> refreshTokenDao,
+            ISpecialityDao<Speciality> specialityDao)
         {
             _jwtOptions = jwtOptions.Value;
             _userManager = userManager;
@@ -36,9 +38,10 @@ namespace Service.Impl
             _studentDao = studentDao;
             _groupDao = groupDao;
             _refreshTokenDao = refreshTokenDao;
+            _specialityDao = specialityDao;
         }
 
-        public string GenerateJwtToken(LearningAssistantUser user)
+        public async Task<string> GenerateJwtToken(LearningAssistantUser user)
         {
             var securityKey = _jwtOptions.GetSymmetricSecurityKey();
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
@@ -47,7 +50,9 @@ namespace Service.Impl
             {
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-                new Claim(JwtRegisteredClaimNames.GivenName, user.UserName)
+                new Claim(JwtRegisteredClaimNames.GivenName, user.UserName),
+                new Claim(ClaimsIdentity.DefaultRoleClaimType, (await _userManager.GetRolesAsync(user))[0])
+
             };
 
             var token = new JwtSecurityToken(
@@ -68,15 +73,44 @@ namespace Service.Impl
             {
                 if (await _userManager.CheckPasswordAsync(user, request.Password))
                 {
-                    var refresh = await CreateRefreshToken(request.Email, ip);
-                    return new PostLoginResponseModel
+
+                    var claims = new List<Claim>
                     {
-                        Token = GenerateJwtToken(user),
-                        Email = user.Email,
-                        UserName = user.UserName,
-                        Role = (await _userManager.GetRolesAsync(user))[0],
-                        RefreshToken = refresh
+                        new Claim("uid", user.Id),
+                        new Claim(ClaimsIdentity.DefaultNameClaimType, user.Email),
+                        new Claim(ClaimsIdentity.DefaultRoleClaimType, (await _userManager.GetRolesAsync(user))[0])
                     };
+                    ClaimsIdentity claimsIdentity =
+                        new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType,
+                            ClaimsIdentity.DefaultRoleClaimType);
+
+                    if (!(await _userManager.IsInRoleAsync(user, "Admin")))
+                    {
+                        var student = await _studentDao.GetStudentByUserId(user.Id);
+                        var refresh = await CreateRefreshToken(request.Email, ip);
+                        return new PostLoginResponseModel
+                        {
+                            Token = await GenerateJwtToken(user),
+                            Email = user.Email,
+                            UserName = user.UserName,
+                            Role = (await _userManager.GetRolesAsync(user))[0],
+                            RefreshToken = refresh,
+                            GroupNumber = student.Group.Number,
+                            SubGroup = student.SubGroup
+                        };
+                    }
+                    else
+                    {
+                        var refresh = await CreateRefreshToken(request.Email, ip);
+                        return new PostLoginResponseModel
+                        {
+                            Token = await GenerateJwtToken(user),
+                            Email = user.Email,
+                            UserName = user.UserName,
+                            Role = (await _userManager.GetRolesAsync(user))[0],
+                            RefreshToken = refresh
+                        };
+                    }
                 }
             }
             return null;
@@ -95,12 +129,39 @@ namespace Service.Impl
                 var registrationResult = await _userManager.CreateAsync(model, request.Password);
                 if (registrationResult.Succeeded)
                     await _userManager.AddToRoleAsync(await _userManager.FindByEmailAsync(request.Email), request.RoleName);
-                if (!request.RoleName.Equals("Admin", StringComparison.OrdinalIgnoreCase))
+                if (!request.RoleName.Equals("Student", StringComparison.OrdinalIgnoreCase))
                     await _studentDao.CreateAsync(new Student
                     {
                         GroupId = (await _groupDao.GetGroupByNumber(request.GroupNumber)).Id,
-                        UserId = (await _userManager.FindByEmailAsync(request.Email)).Id
+                        UserId = (await _userManager.FindByEmailAsync(request.Email)).Id,
+                        SubGroup = request.SubGroup
                     });
+                if (!request.RoleName.Equals("GroupHeadman", StringComparison.OrdinalIgnoreCase))
+                {
+                    await _studentDao.CreateAsync(new Student
+                    {
+                        GroupId = (await _groupDao.GetGroupByNumber(request.GroupNumber)).Id,
+                        UserId = (await _userManager.FindByEmailAsync(request.Email)).Id,
+                        SubGroup = request.SubGroup
+                    });
+                    var group = await _groupDao.GetGroupByNumber(request.GroupNumber);
+                    group.HeadStudentId = (await _studentDao.GetStudentByUserId((await _userManager.FindByEmailAsync(request.Email)).Id)).Id;
+                    await _groupDao.UpdateAsync(group);
+                }
+                if (!request.RoleName.Equals("SpecialityHeadman", StringComparison.OrdinalIgnoreCase))
+                {
+                    await _studentDao.CreateAsync(new Student
+                    {
+                        GroupId = (await _groupDao.GetGroupByNumber(request.GroupNumber)).Id,
+                        UserId = (await _userManager.FindByEmailAsync(request.Email)).Id,
+                        SubGroup = request.SubGroup,
+                        SpecialityId = (await _groupDao.GetGroupByNumber(request.GroupNumber)).Speciality.Id
+                    });
+                    var speciality = (await _groupDao.GetGroupByNumber(request.GroupNumber)).Speciality;
+                    speciality.HeadStudentId = (await _studentDao.GetStudentByUserId((await _userManager.FindByEmailAsync(request.Email)).Id)).Id;
+                    await _specialityDao.UpdateAsync(speciality);
+                }
+
                 return registrationResult.Succeeded;
             }
             catch(Exception ex)
@@ -154,17 +215,34 @@ namespace Service.Impl
                 return null;
 
             var user = await _userManager.FindByEmailAsync(token.Key);
-            var jwt = GenerateJwtToken(user);
+            var jwt = await GenerateJwtToken(user);
             var refresh = await CreateRefreshToken(user.Email, ip);
 
-            return new PostLoginResponseModel
+            if (!(await _userManager.IsInRoleAsync(user, "Admin")))
             {
-                Token = jwt,
-                Email = user.Email,
-                UserName = user.UserName,
-                Role = (await _userManager.GetRolesAsync(user))[0],
-                RefreshToken = refresh
-            };
+                var student = await _studentDao.GetStudentByUserId(user.Id);
+                return new PostLoginResponseModel
+                {
+                    Token = jwt,
+                    Email = user.Email,
+                    UserName = user.UserName,
+                    Role = (await _userManager.GetRolesAsync(user))[0],
+                    RefreshToken = refresh,
+                    GroupNumber = student.Group.Number,
+                    SubGroup = student.SubGroup
+                };
+            }
+            else
+            {
+                return new PostLoginResponseModel
+                {
+                    Token = jwt,
+                    Email = user.Email,
+                    UserName = user.UserName,
+                    Role = (await _userManager.GetRolesAsync(user))[0],
+                    RefreshToken = refresh
+                };
+            }
 
         }
 

@@ -1,5 +1,5 @@
 <div class="modal-header">
-  <h4 class="modal-title" id="modal-title">Create User</h4>
+  <h4 class="modal-title" id="modal-title">Edit User</h4>
   <button type="button" class="btn-close" aria-describedby="modal-title" (click)="modal.dismiss('Cross click')">
   </button>
 </div>
@@ -9,11 +9,11 @@
       <div class="row">
         <div class="col-6">
           <mat-form-field class="example-full-width">
-            <input matInput placeholder="Email"  value={{editedUser.email}} disabled>
+            <input matInput placeholder="Email" [value]="editedUser.email" disabled>
           </mat-form-field>
           <mat-form-field class="example-full-width">
             <input matInput placeholder="Group number" [formControl]="groupNumberFormControl"
-                   [errorStateMatcher]="matcher" [(ngModel)]="editeddUser.groupNumber" (change)="checkGroupNumber()">
+                   [errorStateMatcher]="matcher" [(ngModel)]="editedUser.groupNumber" (change)="checkGroupNumber()">
             <mat-error *ngIf="!groupNumberFormControl.hasError('required')">
               Group with this number doesnt exist
             </mat-error>
@@ -23,7 +23,7 @@
           </mat-form-field>
           <mat-form-field>
             <mat-label>Role</mat-label>
-            <mat-select name="roleName">
+            <mat-select name="roleName" [(ngModel)]="editedUser.roleName">
               <mat-option *ngFor="let role of roles" [value]="role.value">
                 {{role.text}}
               </mat-option>
@@ -35,17 +35,17 @@
         </div>
         <div class="col-6">
           <mat-form-field class="example-full-width">
-            <input matInput placeholder="First name" value={{editedUser.firstName}} disabled>
+            <input matInput placeholder="First name" [value]="editedUser.firstName" disabled>
           </mat-form-field>
           <mat-form-field class="example-full-width">
-            <input matInput placeholder="Last name"  value={{editedUser.lastName}} disabled>
+            <input matInput placeholder="Last name"  [value]="editedUser.lastName" disabled>
           </mat-form-field>
           <mat-form-field class="example-full-width">
-            <input matInput placeholder="Middle name" value={{editedUser.middleName}}>
+            <input matInput placeholder="Middle name" [value]="editedUser.middleName" disabled>
           </mat-form-field>
           <mat-form-field class="example-full-width">
             <input type="number" matInput placeholder="Subgroup" [formControl]="subGroupNumberFormControl"
-                   [errorStateMatcher]="matcher" [(ngModel)]="createdUser.subGroup">
+                   [errorStateMatcher]="matcher" [(ngModel)]="editedUser.subGroup">
           </mat-form-field>
         </div>
       </div>
@@ -54,6 +54,6 @@
 </div>
 <div class="modal-footer">
   <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss('Cancel')">Cancel</button>
-  <button type="button" class="btn btn-outline-dark" (click)="modal.close('Ok')" [disabled]="">Create</button>
+  <button type="button" class="btn btn-outline-dark" (click)="modal.close(editedUser)" [disabled]="roleNameFormControl.invalid || groupNumberFormControl.invalid">Save</button>
 </div>
 

@@ -19,3 +19,8 @@ table {
   margin-top: 3.3vh;
   margin-left: 30%;
 }
+
+mdb-icon:hover {
+  color: #0090FD;
+  cursor: pointer;
+}

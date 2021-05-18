@@ -1,6 +1,8 @@
 import { MatTableDataSource } from '@angular/material/table'
 import { MatPaginator } from '@angular/material/paginator';
 import { AfterViewInit, Component, ViewChild, OnInit } from '@angular/core';
+import { SpecialitiesService } from '../services/speciality.service';
+import { Speciality } from '../classes/iismodels';
 
 @Component({
   selector: 'app-specialitiestable',
@@ -10,17 +12,21 @@ import { AfterViewInit, Component, ViewChild, OnInit } from '@angular/core';
 export class SpecialitiestableComponent implements OnInit {
 
   displayedColumns: string[] = ['name', 'faculty', 'headman', 'groupsCount'];
-  dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
+  specialities: Speciality[];
+  dataSource: MatTableDataSource<Speciality>;
 
   @ViewChild(MatPaginator, {static:false}) paginator: MatPaginator;
 
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-  }
-
-  constructor() { }
+  constructor(private _specialityService: SpecialitiesService) { }
 
   ngOnInit(): void {
+    this._specialityService.getSpecialitites().subscribe((result: Speciality[]) => {
+      this.specialities = result;
+      this.dataSource = new MatTableDataSource<Speciality>(this.specialities);
+      this.dataSource.paginator = this.paginator;
+    },
+      error => {}
+    )
   }
 
 }
@@ -31,24 +37,3 @@ export interface PeriodicElement {
   headman: string;
   groupsCount: number;
 }
-
-const ELEMENT_DATA: PeriodicElement[] = [
-  { name: "Poit", faculty: "Ksis", headman: 'Hydrogen', groupsCount:10},
-  { name: "Poit", faculty: "Ksis", headman: 'Hydrogen', groupsCount:10},
-  { name: "Poit", faculty: "Ksis", headman: 'Hydrogen', groupsCount:10},
-  { name: "Poit", faculty: "Ksis", headman: 'Hydrogen', groupsCount:10},
-  { name: "Poit", faculty: "Ksis", headman: 'Hydrogen', groupsCount:10},
-  { name: "Poit", faculty: "Ksis", headman: 'Hydrogen', groupsCount:10},
-  { name: "Poit", faculty: "Ksis", headman: 'Hydrogen', groupsCount:10},
-  { name: "Poit", faculty: "Ksis", headman: 'Hydrogen', groupsCount:10},
-  { name: "Poit", faculty: "Ksis", headman: 'Hydrogen', groupsCount:10},
-  { name: "Poit", faculty: "Ksis", headman: 'Hydrogen', groupsCount:10},
-  { name: "Poit", faculty: "Ksis", headman: 'Hydrogen', groupsCount:10},
-  { name: "Poit", faculty: "Ksis", headman: 'Hydrogen', groupsCount:10},
-  { name: "Poit", faculty: "Ksis", headman: 'Hydrogen', groupsCount:10},
-  { name: "Poit", faculty: "Ksis", headman: 'Hydrogen', groupsCount:10},
-  { name: "Poit", faculty: "Ksis", headman: 'Hydrogen', groupsCount:10},
-  { name: "Poit", faculty: "Ksis", headman: 'Hydrogen', groupsCount:10},
-  { name: "Poit", faculty: "Ksis", headman: 'Hydrogen', groupsCount:10},
-  { name: "Poit", faculty: "Ksis", headman: 'Hydrogen', groupsCount:10},
-];

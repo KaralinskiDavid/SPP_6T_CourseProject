@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace Service.Impl
 {
@@ -72,6 +73,7 @@ namespace Service.Impl
                     responseModel.UserMiddleName = user.MiddleName;
                     responseModel.Group = _mapper.Map<GroupModel>(student.Group);
                     responseModel.Speciality = _mapper.Map<SpecialityModel>(student.Group.Speciality);
+                    responseModel.SubGroup = student.SubGroup;
                     result.Add(responseModel);
                 }
             }
@@ -82,6 +84,36 @@ namespace Service.Impl
             }
             return result;
         }
+
+        public async Task<IEnumerable<GetStudentResponseModel>> GetStudentsByGroupNumber(string groupNumber)
+        {
+            List<GetStudentResponseModel> result = new List<GetStudentResponseModel>();
+            try
+            {
+                var students = (await _studentDao.GetItemsAsync()).Include(s => s.Group).ThenInclude(g => g.Speciality).Where(s=>s.Group.Number==groupNumber);
+                foreach (var student in students)
+                {
+                    var user = await _userManager.FindByIdAsync(student.UserId);
+                    var responseModel = _mapper.Map<GetStudentResponseModel>(student);
+                    responseModel.UserEmail = user.Email;
+                    responseModel.UserFirstName = user.FirstName;
+                    responseModel.UserLastName = user.LastName;
+                    responseModel.UserMiddleName = user.MiddleName;
+                    responseModel.Group = _mapper.Map<GroupModel>(student.Group);
+                    responseModel.Speciality = _mapper.Map<SpecialityModel>(student.Group.Speciality);
+                    responseModel.SubGroup = student.SubGroup;
+                    result.Add(responseModel);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return null;
+            }
+            return result;
+        }
+
+
 
         public Task<PutStudentResponseModel> UpdateStudent()
         {

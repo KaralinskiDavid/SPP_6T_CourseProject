@@ -15,5 +15,6 @@ namespace Dao.Impl.DaoModels
 
         public virtual LessonType LessonType { get; set; }
         public virtual DaySchedule DaySchedule { get; set; }
+        public virtual ICollection<Queue> Queues { get; set; }
     }
 }

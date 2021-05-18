@@ -9,6 +9,7 @@ namespace Service
     {
         public Task<GetStudentResponseModel> GetStudent(int id);
         public Task<IEnumerable<GetStudentResponseModel>> GetStudents();
+        public Task<IEnumerable<GetStudentResponseModel>> GetStudentsByGroupNumber(string groupNumber);
         public Task<PutStudentResponseModel> UpdateStudent();
         public Task<bool> CreateStudent(StudentModel studentModel);
         public Task<bool> DeleteStudent(int studentId);

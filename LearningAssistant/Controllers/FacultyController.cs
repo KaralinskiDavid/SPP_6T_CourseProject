@@ -1,4 +1,5 @@
 ﻿using Domain.Impl.Models.Response;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service;
@@ -11,6 +12,7 @@ namespace LearningAssistant.Controllers
 {
     [Route("api/[controller]s")]
     [ApiController]
+    [Authorize(Roles ="Admin")]
     public class FacultyController : ControllerBase
     {
         private readonly IFacultyService _facultyService;

@@ -18,7 +18,7 @@
               Email is <strong>required</strong>
             </mat-error>
             <mat-error *ngIf="duplicateName==true">
-              createdUser with this email already exists
+              User with this email already exists
             </mat-error>
           </mat-form-field>
           <mat-form-field class="example-full-width">
@@ -43,7 +43,7 @@
           </mat-form-field>
           <mat-form-field>
             <mat-label>Role</mat-label>
-            <mat-select name="roleName">
+            <mat-select name="roleName" [(ngModel)]="createdUser.roleName">
               <mat-option *ngFor="let role of roles" [value]="role.value">
                 {{role.text}}
               </mat-option>
@@ -86,5 +86,5 @@
 </div>
 <div class="modal-footer">
   <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss('Cancel')">Cancel</button>
-  <button type="button" class="btn btn-outline-dark" (click)="modal.close('Ok')" [disabled]="">Create</button>
+  <button type="button" class="btn btn-outline-dark" (click)="modal.close(createdUser)" [disabled]="">Create</button>
 </div>

@@ -30,7 +30,7 @@ export class EditUserModalComponent implements OnInit {
 
   constructor(public modal: NgbActiveModal, private _authService: AuthService,
     private _groupService: GroupService, public toastr: ToastrService) { }
-  createdUser: User;
+  editedUser: User;
 
   roles: Role[] = [
     { text: 'Group headman', value: 'GroupHeadman' },
@@ -39,28 +39,6 @@ export class EditUserModalComponent implements OnInit {
   ];
 
   duplicateName = false;
-
-  firstNameFormControl = new FormControl('', [
-    Validators.required,
-  ]);
-
-  lastNameFormControl = new FormControl('', [
-    Validators.required,
-  ]);
-
-  middleNameFormControl = new FormControl('', [
-    Validators.required,
-  ]);
-
-  passwordFormControl = new FormControl('', [
-    Validators.required,
-    Validators.minLength(6),
-  ]);
-
-  emailFormControl = new FormControl('', [
-    Validators.required,
-    Validators.email,
-  ]);
 
   roleNameFormControl = new FormControl('', [
     Validators.required,
@@ -75,30 +53,17 @@ export class EditUserModalComponent implements OnInit {
 
   matcher = new MyErrorStateMatcher();
 
-  checkEmail() {
-    if (this.createdUser.email != null && this.createdUser.email.length > 0) {
-      this._authService.checkEmail(this.createdUser.email).subscribe((result: boolean) => {
-        this.duplicateName = result;
-        if (result)
-          this.emailFormControl.setErrors({ incorrect: true });
-        else
-          this.emailFormControl.setErrors(null);
-      });
-    }
-  }
-
   checkGroupNumber() {
-    if (this.createdUser.groupNumber != null && this.createdUser.groupNumber.length > 0)
-      this._groupService.checkGroupNumber(this.createdUser.groupNumber).subscribe((result: boolean) => {
+    if (this.editedUser.groupNumber != null && this.editedUser.groupNumber.length > 0)
+      this._groupService.checkGroupNumber(this.editedUser.groupNumber).subscribe((result: boolean) => {
         if (!result)
           this.groupNumberFormControl.setErrors({ incorrect: true });
-        else
-          this.groupNumberFormControl.setErrors(null);
+        else if(this.groupNumberFormControl.errors!=null)
+          this.groupNumberFormControl.errors["incorrect"]=null;
       });
   }
 
   ngOnInit() {
-    this.createdUser = new User();
   }
 
 }

@@ -1,0 +1,14 @@
+<div class="modal-header">
+  <h4 class="modal-title" id="modal-title">Queue</h4>
+  <button type="button" class="btn-close" aria-describedby="modal-title" (click)="modal.dismiss('Cross click')">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <mat-list role="list">
+    <mat-list-item role="listitem" *ngFor="let student of students; let i=index">{{ (i+1).toString() + "." + student.userFirstName + " " + student.userLastName}}</mat-list-item>
+  </mat-list>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-danger" (click)="modal.close('Ok')">Ok</button>
+</div>

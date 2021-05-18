@@ -10,7 +10,7 @@ namespace Service
         public Task<PostLoginResponseModel> LoginAsync(PostLoginRequestModel request, string ipAddress);
         public Task<bool> RegisterAsync(PostRegisterRequestModel request);
         public Task<bool> CheckUserEmail(string userEmail);
-        string GenerateJwtToken(LearningAssistantUser user);
+        Task<string> GenerateJwtToken(LearningAssistantUser user);
         public Task<PostLoginResponseModel> RefreshToken(string refreshToken, string ip);
     }
 }

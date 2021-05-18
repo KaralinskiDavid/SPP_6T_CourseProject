@@ -27,8 +27,10 @@ export interface Role {
 })
 export class AddUserModal implements OnInit {
   constructor(public modal: NgbActiveModal, private _authService: AuthService,
-    private _groupService: GroupService, public toastr: ToastrService) { }
+    private _groupService: GroupService, public toastr: ToastrService) {
+  }
   createdUser: User;
+
 
   roles: Role[] = [
     { text: 'Group headman', value: 'GroupHeadman' },
@@ -37,6 +39,28 @@ export class AddUserModal implements OnInit {
   ];
 
   duplicateName = false;
+
+  firstNameFormControl = new FormControl('', [
+    Validators.required,
+  ]);
+
+  lastNameFormControl = new FormControl('', [
+    Validators.required,
+  ]);
+
+  middleNameFormControl = new FormControl('', [
+    Validators.required,
+  ]);
+
+  passwordFormControl = new FormControl('', [
+    Validators.required,
+    Validators.minLength(6),
+  ]);
+
+  emailFormControl = new FormControl('', [
+    Validators.required,
+    Validators.email,
+  ]);
 
   roleNameFormControl = new FormControl('', [
     Validators.required,
@@ -51,13 +75,25 @@ export class AddUserModal implements OnInit {
 
   matcher = new MyErrorStateMatcher();
 
+  checkEmail() {
+    if (this.createdUser.email != null && this.createdUser.email.length > 0) {
+      this._authService.checkEmail(this.createdUser.email).subscribe((result: boolean) => {
+        this.duplicateName = result;
+        if (result)
+          this.emailFormControl.setErrors({ incorrect: true });
+        else if(this.emailFormControl.invalid)
+          this.emailFormControl.errors['incorrect'] = null;
+      });
+    }
+  }
+
   checkGroupNumber() {
     if (this.createdUser.groupNumber != null && this.createdUser.groupNumber.length > 0)
       this._groupService.checkGroupNumber(this.createdUser.groupNumber).subscribe((result: boolean) => {
         if (!result)
           this.groupNumberFormControl.setErrors({ incorrect: true });
         else
-          this.groupNumberFormControl.setErrors(null);
+          this.groupNumberFormControl.errors['incorrect'] = null;
       });
   }
 

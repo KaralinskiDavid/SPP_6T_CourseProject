@@ -1,4 +1,5 @@
 ﻿using Domain.Impl.Models.Response;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service;
@@ -22,6 +23,7 @@ namespace LearningAssistant.Controllers
 
         [HttpGet]
         [Route("currentWeek")]
+        [Authorize(Roles = "GroupHeadman, SpecialityHeadman, Student")]
         public async Task<ActionResult<int>> GetCurrentWeek()
         {
             var result = await _scheduleService.GetCurrentWeek();
@@ -30,6 +32,7 @@ namespace LearningAssistant.Controllers
 
         [HttpPost]
         [Route("{groupNumber}")]
+        [Authorize(Roles = "GroupHeadman, SpecialityHeadman, Student")]
         public async Task<ActionResult<GetScheduleResponseModel>> GetSchedulesForGroup([FromRoute] string groupNumber)
         {
             var result = await _scheduleService.GetScheduleByGroupNumber(groupNumber);
@@ -38,6 +41,7 @@ namespace LearningAssistant.Controllers
 
         [HttpPost]
         [Route("refresh/{groupNumber}")]
+        [Authorize(Roles = "GroupHeadman, SpecialityHeadman, Student")]
         public async Task<ActionResult> RefreshGroupSchedule([FromRoute] string groupNumber)
         {
             var result = await _scheduleService.RefreshGroupSchedule(groupNumber);
@@ -46,5 +50,11 @@ namespace LearningAssistant.Controllers
             return BadRequest();
         }
 
+        //[HttpPost]
+        //[Route("subjects/{groupNumber}")]
+        //public async Task<ActionResult> GetSpecialitySubjects([FromRoute] string groupNumber)
+        //{
+
+        //}
     }
 }

@@ -81,6 +81,8 @@ export class ErrorInterceptor implements HttpInterceptor {
     localStorage.removeItem('userName');
     localStorage.removeItem('email');
     localStorage.removeItem('role');
+    localStorage.removeItem('groupNumber');
+    localStorage.removeItem('subGroup');
 
     window.location.replace('login');
 

@@ -19,6 +19,7 @@ export class Student {
   public userId: string;
   public group: Group;
   public subgroup: number;
+  public roleName: string;
 }
 
 export class Speciality {
@@ -54,7 +55,8 @@ export class Lesson {
   public lessonTypeId: number; 
   public auditory: string; 
   public weekNumber: string;
-  public lessonType: LessonType; 
+  public lessonType: LessonType;
+  public queues: Queue[];
 }
 
 export class DaySchedule {
@@ -67,4 +69,12 @@ export class DaySchedule {
 export class Schedule {
   public id: number;
   public daySchedules: DaySchedule[];
+}
+
+export class Queue {
+  public id: number; 
+  public lessonId: number; 
+  public date: string; 
+  public subGroup: string; 
+  public studentIds: string; 
 }

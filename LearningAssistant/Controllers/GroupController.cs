@@ -1,4 +1,5 @@
 ﻿using Domain.Impl.Models.Response;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service;
@@ -21,6 +22,7 @@ namespace LearningAssistant.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles ="Admin")]
         public async Task<ActionResult<List<GetGroupResponseModel>>> GetGroups()
         {
             var result = await _groupService.GetGroups();

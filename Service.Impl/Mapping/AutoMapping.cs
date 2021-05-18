@@ -18,6 +18,8 @@ namespace Service.Impl.Mapping
                 .ForMember(f => f.Abbreviation, opt => opt.MapFrom(fm => fm.Abbrev));
             CreateMap<Faculty, GetFacultyResponseModel>();
 
+            CreateMap<Faculty, Domain.Impl.Models.FacultyModel>()
+                .ForMember(f => f.Abbreviation, opt => opt.MapFrom(fm => fm.Abbreviation));
             CreateMap<SpecialityModel, Speciality>()
                 .ForMember(s => s.Abbreviature, opt => opt.MapFrom(sm => sm.Abbrev));
             CreateMap<Speciality, GetSpecialityResponseModel>();
@@ -25,6 +27,8 @@ namespace Service.Impl.Mapping
                 .ForMember(s => s.Faculty, opt => opt.Ignore())
                 .ForMember(s => s.Groups, opt => opt.Ignore())
                 .ForMember(s => s.HeadStudent, opt => opt.Ignore());
+
+            CreateMap<PostQueueRequestModel, Queue>();
 
             CreateMap<GroupModel, Group>()
                 .ForMember(g => g.SpecialityId, opt => opt.MapFrom(gm => gm.SpecialityDepartmentEducationFormId))
@@ -38,6 +42,7 @@ namespace Service.Impl.Mapping
 
             CreateMap<Student, GetStudentResponseModel>().ForMember(s=>s.Group, opt=>opt.Ignore()).ForMember(s=>s.Speciality, opt=>opt.Ignore());
 
+            CreateMap<Queue, Domain.Impl.Models.QueueModel>();
             CreateMap<LessonType, Domain.Impl.Models.LessonTypeModel>();
             CreateMap<Lesson, Domain.Impl.Models.LessonModel>();
             CreateMap<DaySchedule, Domain.Impl.Models.DayScheduleModel>();

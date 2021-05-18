@@ -26,7 +26,8 @@ namespace Service.Impl
             _facultyDao = facultyDao;
         }
 
-        public async Task<List<GetSpecialityResponseModel>> GetSpecialities() => _mapper.Map<List<GetSpecialityResponseModel>>(await (await _specialityDao.GetItemsAsync()).ToListAsync());
+        public async Task<List<GetSpecialityResponseModel>> GetSpecialities() => _mapper.Map<List<GetSpecialityResponseModel>>(await (await _specialityDao.GetItemsAsync())
+            .Include(s=>s.Faculty).Include(s=>s.HeadStudent).Include(s=>s.Groups).ToListAsync());
 
         public async Task<bool> RefreshSpecialities()
         {

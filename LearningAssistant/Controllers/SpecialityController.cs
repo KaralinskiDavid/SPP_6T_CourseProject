@@ -1,4 +1,5 @@
 ﻿using Domain.Impl.Models.Response;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service;
@@ -9,8 +10,9 @@ using System.Threading.Tasks;
 
 namespace LearningAssistant.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]es")]
     [ApiController]
+    [Authorize(Roles ="Admin")]
     public class SpecialityController : ControllerBase
     {
         private readonly ISpecialityService _specialityService;

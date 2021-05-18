@@ -40,8 +40,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ClientApp\src\app\guards\admin.guard.ts" />
+    <None Remove="ClientApp\src\app\guards\login.guard.ts" />
     <None Remove="ClientApp\src\app\helpers\error.interceptor.ts" />
     <None Remove="ClientApp\src\app\services\group.service.ts" />
+    <None Remove="ClientApp\src\app\services\queue.service.ts" />
     <None Remove="ClientApp\src\app\services\schedule.service.ts" />
     <None Remove="ClientApp\src\app\services\speciality.service.ts" />
     <None Remove="ClientApp\src\app\services\student.service.ts" />
@@ -55,16 +58,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <TypeScriptCompile Include="ClientApp\src\app\guards\admin.guard.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\guards\login.guard.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\helpers\error.interceptor.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\services\group.service.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\services\queue.service.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\services\schedule.service.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\services\speciality.service.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\services\student.service.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\services\user.service.ts" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="ClientApp\src\app\guards\" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

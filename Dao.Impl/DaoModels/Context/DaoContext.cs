@@ -16,6 +16,7 @@ namespace Dao.Impl.DaoModels.Context
         public DbSet<Lesson> Lessons { get; set; }
         public DbSet<LessonType> LessonTypes { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
+        public DbSet<Queue> Queues { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -45,6 +46,11 @@ namespace Dao.Impl.DaoModels.Context
             modelBuilder.Entity<Lesson>(entity =>
             {
                 entity.HasOne(e => e.LessonType).WithMany().HasForeignKey(e => e.LessonTypeId);
+                entity.HasMany(e => e.Queues).WithOne(q => q.Lesson);
+            });
+            modelBuilder.Entity<Queue>(entity =>
+            {
+                entity.HasOne(e => e.Lesson).WithMany(l=>l.Queues).HasForeignKey(e => e.LessonId);
             });
         }
 

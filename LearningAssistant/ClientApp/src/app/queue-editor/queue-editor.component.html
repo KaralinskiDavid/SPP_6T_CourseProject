@@ -1,0 +1,32 @@
+<div>
+  <div class="example-container">
+    <h2>Students</h2>
+
+    <div cdkDropList
+         #studentsList="cdkDropList"
+         [cdkDropListData]="students"
+         [cdkDropListConnectedTo]="[queueList]"
+         class="example-list"
+         (cdkDropListDropped)="drop($event)">
+      <div class="example-box" *ngFor="let item of students" cdkDrag>{{item.userLastName + " " + item.userFirstName}}</div>
+    </div>
+  </div>
+
+  <button mat-fab color="warn" id="generate" (click)="randomGenerate()" [disabled]="!students?.length>0 && !queue?.length>0">Generate</button>
+
+  <div class="example-container">
+    <h2>Queue</h2>
+
+    <div cdkDropList
+         #queueList="cdkDropList"
+         [cdkDropListData]="queue"
+         [cdkDropListConnectedTo]="[studentsList]"
+         class="example-list"
+         (cdkDropListDropped)="drop($event)">
+      <div class="example-box" *ngFor="let item of queue" cdkDrag>{{item.userLastName + " " + item.userFirstName}}</div>
+    </div>
+  </div>
+</div>
+
+<button mat-raised-button color="basic" (click)="onCancelClicked()">Cancel</button>
+<button mat-raised-button color="warn" (click)="onSaveClicked()">Save</button>

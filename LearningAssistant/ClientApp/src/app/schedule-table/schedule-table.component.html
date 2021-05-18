@@ -1,13 +1,14 @@
-<div class="mat-elevation-z8">
+<div class="mat-elevation-z8" [hidden]="scheduleTableDisabled">
   <mat-slide-toggle id="slider" class="example-margin"
                     [color]="color"
-                    [checked]="checked"
-                    [disabled]="disabled">
+                    [(ngModel)]="checked"
+                    [disabled]="subGroup==null"
+                    (input)="filterSubGroup($event)">
     My subgroup only
   </mat-slide-toggle>
-  <mdb-icon fas icon="sync" id="sync"></mdb-icon>
+  <mdb-icon fas icon="sync" id="sync" (click)="refreshSchedule()"></mdb-icon>
   <mat-form-field id="dateInput">
-    <input matInput [matDatepicker]="dp3" placeholder="Input disabled" disabled  [(ngModel)]="selectedDate" (dateChange)="selectedDateChanged()">
+    <input matInput [matDatepicker]="dp3"  disabled  [(ngModel)]="selectedDate" (dateChange)="selectedDateChanged()">
     <mat-datepicker-toggle matSuffix [for]="dp3"></mat-datepicker-toggle>
     <mat-datepicker #dp3 disabled="false"></mat-datepicker>
   </mat-form-field>
@@ -44,10 +45,16 @@
 
     <ng-container matColumnDef="queues">
       <th mat-header-cell *matHeaderCellDef> Queues </th>
-      <td mat-cell *matCellDef="let element" [style.background-color]="element.lessonType?.name=='ПЗ' ? '#d1bd26' : element.lessonType?.name=='ЛР' ? '#a3240d' : '#368c20'"> </td>
+      <td mat-cell *matCellDef="let element" >
+      <mdb-icon *ngIf="(element.lessonType?.name=='ПЗ' || element.lessonType?.name=='ЛР') && userRole=='GroupHeadman' && !isQueueForSelectedDate(element)" fas icon="plus" style="margin-left:1.5vw" (click)="createQueue(element)"></mdb-icon>
+      <mdb-icon *ngIf="((element.lessonType?.name=='ПЗ' || element.lessonType?.name=='ЛР') && isQueueForSelectedDate(element))" fas icon="eye" style="margin-left:1.5vw" (click)="showQueue(element)" ></mdb-icon>
+      <mdb-icon *ngIf="((element.lessonType?.name=='ПЗ' || element.lessonType?.name=='ЛР') && userRole=='GroupHeadman' && isQueueForSelectedDate(element))" fas icon="trash" style="margin-left:1.5vw" (click)="deleteQueue(element)"></mdb-icon>
+      </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
 </div>
+
+<app-queue-editor [hidden]="queueEditorDisabled" (showTable)="showTable()" [lesson]="selectedLesson" [groupNumber]="groupNumber" [selectedDate]="selectedDate" [subGroup]="subGroup"></app-queue-editor>

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Schedule = exports.DaySchedule = exports.Lesson = exports.LessonType = exports.Faculty = exports.Speciality = exports.Student = exports.Group = void 0;
+exports.Queue = exports.Schedule = exports.DaySchedule = exports.Lesson = exports.LessonType = exports.Faculty = exports.Speciality = exports.Student = exports.Group = void 0;
 var Group = /** @class */ (function () {
     function Group() {
     }
@@ -49,4 +49,10 @@ var Schedule = /** @class */ (function () {
     return Schedule;
 }());
 exports.Schedule = Schedule;
+var Queue = /** @class */ (function () {
+    function Queue() {
+    }
+    return Queue;
+}());
+exports.Queue = Queue;
 //# sourceMappingURL=iismodels.js.map

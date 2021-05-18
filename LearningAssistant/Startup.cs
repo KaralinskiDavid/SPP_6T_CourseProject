@@ -140,6 +140,7 @@ namespace LearningAssistant
             services.AddTransient<IAuthService, AuthService>();
             services.AddTransient<IScheduleService, ScheduleService>();
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IQueueService, QueueService>();
         }
 
         private void AddRepositories(IServiceCollection services)
@@ -150,6 +151,7 @@ namespace LearningAssistant
             services.AddTransient<IStudentDao<Student>, StudentDao>();
             services.AddTransient<IScheduleDao<Schedule>, ScheduleDao>();
             services.AddTransient<IRefreshTokenDao<RefreshToken>, RefreshTokenDao>();
+            services.AddTransient<IQueueDao<Queue>, QueueDao>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -188,6 +190,9 @@ namespace LearningAssistant
             });
 
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

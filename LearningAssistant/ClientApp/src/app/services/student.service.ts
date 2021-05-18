@@ -15,4 +15,8 @@ export class StudentService {
     return this.http.get(this.url);
   }
 
+  getStudentsByGroupNumber(groupNumber: string) {
+    return this.http.get(this.url+"/"+groupNumber);
+  }
+
 }

@@ -12,5 +12,6 @@ namespace Service
         public Task<PostUserResponseModel> CreateUser(PostUserRequestModel request);
         public Task<PutUserResponseModel> UpdateUser(PutUserRequestModel request);
         public Task<bool?> DeleteUser(string userId);
+        public Task<bool?> Update(string userId, PutUserRequestModel request);
     }
 }
