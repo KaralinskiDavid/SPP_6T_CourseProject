@@ -16,6 +16,7 @@ namespace Service.Impl.Mapping
 
             CreateMap<FacultyModel, Faculty>()
                 .ForMember(f => f.Abbreviation, opt => opt.MapFrom(fm => fm.Abbrev));
+
             CreateMap<Faculty, GetFacultyResponseModel>();
 
             CreateMap<Faculty, Domain.Impl.Models.FacultyModel>()
@@ -23,10 +24,7 @@ namespace Service.Impl.Mapping
             CreateMap<SpecialityModel, Speciality>()
                 .ForMember(s => s.Abbreviature, opt => opt.MapFrom(sm => sm.Abbrev));
             CreateMap<Speciality, GetSpecialityResponseModel>();
-            CreateMap<Speciality, Domain.Impl.Models.SpecialityModel>()
-                .ForMember(s => s.Faculty, opt => opt.Ignore())
-                .ForMember(s => s.Groups, opt => opt.Ignore())
-                .ForMember(s => s.HeadStudent, opt => opt.Ignore());
+            CreateMap<Speciality, Domain.Impl.Models.SpecialityModel>();
 
             CreateMap<PostQueueRequestModel, Queue>();
 
@@ -61,6 +59,11 @@ namespace Service.Impl.Mapping
                 .ForMember(l=>l.WeekNumber, opt=>opt.MapFrom(lm=>string.Join(',', lm.WeekNumber)))
                 .ForMember(l=>l.LessonTypeId, opt=>opt.MapFrom(lm=> lm.LessonType=="ЛК" ? 1 : lm.LessonType=="ЛР" ? 2 : 3));
 
+            CreateMap<SpecialityFile, Domain.Impl.Models.FileModel>();
+            CreateMap<Domain.Impl.Models.FileModel, SpecialityFile>();
+            CreateMap<Domain.Impl.Models.SpecialityFileSectionModel, SpecialityFileSection>();
+            CreateMap<SpecialityFileSection, Domain.Impl.Models.SpecialityFileSectionModel>();
+            CreateMap<PostSpecialityFileSectionRequestModel, SpecialityFileSection>();
         }
 
     }

@@ -8,7 +8,8 @@ namespace Domain.Impl.Models.Response
         public int Course { get; set; }
         public int SpecialityId { get; set; }
         public string Number { get; set; }
-        public int HeadStudentId { get; set; }
+        public int? HeadStudentId { get; set; }
+        public string HeadStudentName { get; set; }
 
         public SpecialityModel Speciality { get; set; }
         public StudentModel Student { get; set; }

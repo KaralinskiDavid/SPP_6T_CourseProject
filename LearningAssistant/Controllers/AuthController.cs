@@ -48,10 +48,10 @@ namespace LearningAssistant.Controllers
         }
 
         [HttpPost]
-        [Route("refresh/{refreshToken}")]
-        public async Task<ActionResult> RefreshToken([FromRoute] string refreshToken)
+        [Route("refresh")]
+        public async Task<ActionResult<PostLoginResponseModel>> RefreshToken([FromBody] PostRefreshTokenRequestModel request)
         {
-            var response = await _authService.RefreshToken(refreshToken, HttpContext.Connection?.RemoteIpAddress.ToString());
+            var response = await _authService.RefreshToken(request.RefreshToken, HttpContext.Connection?.RemoteIpAddress.ToString());
             if (response == null)
                 return Unauthorized();
             else

@@ -141,6 +141,8 @@ namespace LearningAssistant
             services.AddTransient<IScheduleService, ScheduleService>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IQueueService, QueueService>();
+            services.AddTransient<IFileService, FileService>();
+            services.AddTransient<ISpecialityFileSectionService, SpecialityFileSectionService>();
         }
 
         private void AddRepositories(IServiceCollection services)
@@ -152,6 +154,8 @@ namespace LearningAssistant
             services.AddTransient<IScheduleDao<Schedule>, ScheduleDao>();
             services.AddTransient<IRefreshTokenDao<RefreshToken>, RefreshTokenDao>();
             services.AddTransient<IQueueDao<Queue>, QueueDao>();
+            services.AddTransient<ISpecialityFileSectionDao<SpecialityFileSection>, SpecialityFileSectionDao>();
+            services.AddTransient<ISpecialityFileDao<SpecialityFile>, SpecialityFileDao>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

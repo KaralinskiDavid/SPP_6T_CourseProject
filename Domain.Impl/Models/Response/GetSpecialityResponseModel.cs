@@ -10,6 +10,7 @@ namespace Domain.Impl.Models.Response
         public string Abbreviature { get; set; }
         public string Code { get; set; }
         public int? HeadStudentId { get; set; }
+        public string HeadStudentName { get; set; }
 
         public FacultyModel Faculty { get; set; }
         public ICollection<GroupModel> Groups { get; set; }

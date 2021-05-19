@@ -237,6 +237,49 @@ namespace LearningAssistant.Migrations.Dao
                     b.ToTable("Specialities");
                 });
 
+            modelBuilder.Entity("Dao.Impl.DaoModels.SpecialityFile", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Path")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SpecialityFileSectionId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SpecialityFileSectionId");
+
+                    b.ToTable("SpecialityFiles");
+                });
+
+            modelBuilder.Entity("Dao.Impl.DaoModels.SpecialityFileSection", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SpecialityId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SpecialityId");
+
+                    b.ToTable("SpecialityFileSections");
+                });
+
             modelBuilder.Entity("Dao.Impl.DaoModels.Student", b =>
                 {
                     b.Property<int>("Id")
@@ -349,6 +392,28 @@ namespace LearningAssistant.Migrations.Dao
                     b.Navigation("HeadStudent");
                 });
 
+            modelBuilder.Entity("Dao.Impl.DaoModels.SpecialityFile", b =>
+                {
+                    b.HasOne("Dao.Impl.DaoModels.SpecialityFileSection", "SpecialityFileSection")
+                        .WithMany("SpecialityFiles")
+                        .HasForeignKey("SpecialityFileSectionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("SpecialityFileSection");
+                });
+
+            modelBuilder.Entity("Dao.Impl.DaoModels.SpecialityFileSection", b =>
+                {
+                    b.HasOne("Dao.Impl.DaoModels.Speciality", "Speciality")
+                        .WithMany("SpecialityFileSections")
+                        .HasForeignKey("SpecialityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Speciality");
+                });
+
             modelBuilder.Entity("Dao.Impl.DaoModels.Student", b =>
                 {
                     b.HasOne("Dao.Impl.DaoModels.Group", "Group")
@@ -390,6 +455,13 @@ namespace LearningAssistant.Migrations.Dao
             modelBuilder.Entity("Dao.Impl.DaoModels.Speciality", b =>
                 {
                     b.Navigation("Groups");
+
+                    b.Navigation("SpecialityFileSections");
+                });
+
+            modelBuilder.Entity("Dao.Impl.DaoModels.SpecialityFileSection", b =>
+                {
+                    b.Navigation("SpecialityFiles");
                 });
 
             modelBuilder.Entity("Dao.Impl.DaoModels.Student", b =>

@@ -4,6 +4,7 @@ export class Group {
   public course: number;
   public specialityId: number;
   public headStudentId: number;
+  public headStudentName: string;
 
   public students: Student[];
   public student: Student;
@@ -29,8 +30,10 @@ export class Speciality {
   public code: string;
   public name: string;
   public abbreviature: string;
+  public headStudentName: string;
 
   public groups: Group[];
+  public specialityFileSections: SpecialityFileSection[];
   public headStudent: Student;
   public faculty: Faculty;
 }
@@ -77,4 +80,19 @@ export class Queue {
   public date: string; 
   public subGroup: string; 
   public studentIds: string; 
+}
+
+export class SpecialityFile {
+  public id: number; 
+  public name: string; 
+  public path: string; 
+  public specialityFileSectionId: number; 
+}
+
+export class SpecialityFileSection {
+  public id: number;
+  public name: string;
+  public specialityId: number;
+
+  public specialityFiles: SpecialityFile[];
 }

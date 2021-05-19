@@ -7,6 +7,8 @@ using Dao.Impl.DaoModels;
 using Dao;
 using Domain.Impl.Models.Response;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Dto.Identity;
 
 namespace Service.Impl
 {
@@ -16,18 +18,29 @@ namespace Service.Impl
         private readonly IBsuirIisApiService _bsuirIisApiService;
         private readonly ISpecialityDao<Speciality> _specialityDao;
         private readonly IFacultyDao<Faculty> _facultyDao;
+        private readonly UserManager<LearningAssistantUser> _userManager;
 
         public SpecialityService(IMapper mapper, IBsuirIisApiService bsuirIisApiService,
-            ISpecialityDao<Speciality> specialityDao, IFacultyDao<Faculty> facultyDao)
+            ISpecialityDao<Speciality> specialityDao, IFacultyDao<Faculty> facultyDao, UserManager<LearningAssistantUser> userManager)
         {
             _mapper = mapper;
             _bsuirIisApiService = bsuirIisApiService;
             _specialityDao = specialityDao;
             _facultyDao = facultyDao;
+            _userManager = userManager;
         }
 
-        public async Task<List<GetSpecialityResponseModel>> GetSpecialities() => _mapper.Map<List<GetSpecialityResponseModel>>(await (await _specialityDao.GetItemsAsync())
-            .Include(s=>s.Faculty).Include(s=>s.HeadStudent).Include(s=>s.Groups).ToListAsync());
+        public async Task<List<GetSpecialityResponseModel>> GetSpecialities()
+        {
+            var specialities = _mapper.Map<List<GetSpecialityResponseModel>>(await (await _specialityDao.GetItemsAsync())
+            .Include(s => s.Faculty).Include(s => s.HeadStudent).Include(s => s.Groups).ToListAsync());
+            foreach(var speciality in specialities.Where(s=>s.HeadStudentId!=null))
+            {
+                var user = await _userManager.FindByIdAsync(speciality.HeadStudent.UserId);
+                speciality.HeadStudentName = user.LastName + " " + user.FirstName;
+            }
+            return specialities;
+        }
 
         public async Task<bool> RefreshSpecialities()
         {

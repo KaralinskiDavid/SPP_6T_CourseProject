@@ -23,13 +23,16 @@
           </mat-form-field>
           <mat-form-field>
             <mat-label>Role</mat-label>
-            <mat-select name="roleName" [(ngModel)]="editedUser.roleName">
+            <mat-select name="roleName" [(value)]="editedUser.roleName" [formControl]="roleNameFormControl" (selectionChange)="checkRole();">
               <mat-option *ngFor="let role of roles" [value]="role.value">
                 {{role.text}}
               </mat-option>
             </mat-select>
             <mat-error *ngIf="roleNameFormControl.hasError('required')">
               Role is <strong>required</strong>
+            </mat-error>
+            <mat-error *ngIf="roleNameFormControl.hasError('alreadyExist')">
+              User with the same role in the same group/speciality already exists
             </mat-error>
           </mat-form-field>
         </div>

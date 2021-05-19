@@ -19,4 +19,8 @@ export class GroupService {
     return this.http.get(this.url + "/check/" + groupNumber);
   }
 
+  getGroupByNumber(groupNumber: string) {
+    return this.http.get(this.url + "/" + groupNumber);
+  }
+
 }

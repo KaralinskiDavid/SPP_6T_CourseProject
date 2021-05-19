@@ -15,8 +15,8 @@
 
     <!-- Weight Column -->
     <ng-container matColumnDef="headman">
-      <th mat-header-cell *matHeaderCellDef> Headman </th>
-      <td mat-cell *matCellDef="let element"> {{element.headStudent}} </td>
+      <th mat-header-cell *matHeaderCellDef> Headman</th>
+      <td mat-cell *matCellDef="let element"> {{element.headStudent==null ? "-" : element.headStudentName}} </td>
     </ng-container>
 
     <ng-container matColumnDef="groupsCount">

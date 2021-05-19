@@ -17,7 +17,9 @@ namespace Dao.Impl.DaoModels.Context
         public DbSet<LessonType> LessonTypes { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<Queue> Queues { get; set; }
-
+        public DbSet<SpecialityFileSection> SpecialityFileSections { get; set; }
+        public DbSet<SpecialityFile> SpecialityFiles { get; set; }
+             
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Student>(entity =>
@@ -28,6 +30,7 @@ namespace Dao.Impl.DaoModels.Context
             modelBuilder.Entity<Speciality>(entity =>
             {
                 entity.HasOne(e => e.HeadStudent).WithOne(s=>s.Speciality).HasForeignKey<Speciality>(s=>s.HeadStudentId);
+                entity.HasMany(s => s.SpecialityFileSections).WithOne(sf => sf.Speciality);
             });
             modelBuilder.Entity<Group>(entity =>
             {
@@ -51,6 +54,15 @@ namespace Dao.Impl.DaoModels.Context
             modelBuilder.Entity<Queue>(entity =>
             {
                 entity.HasOne(e => e.Lesson).WithMany(l=>l.Queues).HasForeignKey(e => e.LessonId);
+            });
+            modelBuilder.Entity<SpecialityFileSection>(entity =>
+            {
+                entity.HasMany(sfc=>sfc.SpecialityFiles).WithOne(sf=>sf.SpecialityFileSection);
+                entity.HasOne(sfc => sfc.Speciality).WithMany(s => s.SpecialityFileSections).HasForeignKey(e => e.SpecialityId);
+            });
+            modelBuilder.Entity<SpecialityFile>(entity =>
+            {
+                entity.HasOne(e => e.SpecialityFileSection).WithMany(l => l.SpecialityFiles).HasForeignKey(e => e.SpecialityFileSectionId);
             });
         }
 

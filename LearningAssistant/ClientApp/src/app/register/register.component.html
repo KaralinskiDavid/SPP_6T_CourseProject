@@ -27,7 +27,7 @@
           </mat-error>
         </mat-form-field>
         <mat-form-field class="example-full-width">
-          <input matInput placeholder="Confirm password" [formControl]="confirmPasswordFormControl"
+          <input type="password" matInput placeholder="Confirm password" [formControl]="confirmPasswordFormControl"
                  [errorStateMatcher]="matcher" (change)="checkConfirm()">
           <mat-error *ngIf="confirmPasswordFormControl.value!=user.password && (confirmPasswordFormControl.dirty || confirmPasswordFormControl.touched)">
             Password mismatch

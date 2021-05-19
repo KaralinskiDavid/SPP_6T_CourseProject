@@ -21,7 +21,7 @@ export class ErrorInterceptor implements HttpInterceptor {
     let accessToken = localStorage.getItem('access_token') ? localStorage.getItem('access_token') : '';
     return next.handle(this.addToken(req, accessToken)).pipe(
       catchError((error: HttpErrorResponse) => {
-        if (error) {
+         if (error) {
           switch (error.status) {
             case 401:
               return this.handle401Error(req, next);

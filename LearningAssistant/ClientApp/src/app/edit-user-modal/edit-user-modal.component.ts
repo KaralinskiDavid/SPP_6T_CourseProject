@@ -7,6 +7,7 @@ import { ErrorStateMatcher } from '@angular/material/core';
 import { Router } from '@angular/router';
 import { User } from '../classes/user';
 import { GroupService } from '../services/group.service';
+import { Group } from '../classes/iismodels';
 
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
@@ -31,6 +32,7 @@ export class EditUserModalComponent implements OnInit {
   constructor(public modal: NgbActiveModal, private _authService: AuthService,
     private _groupService: GroupService, public toastr: ToastrService) { }
   editedUser: User;
+  currentGroup: Group;
 
   roles: Role[] = [
     { text: 'Group headman', value: 'GroupHeadman' },
@@ -39,6 +41,7 @@ export class EditUserModalComponent implements OnInit {
   ];
 
   duplicateName = false;
+  firstRole: string;
 
   roleNameFormControl = new FormControl('', [
     Validators.required,
@@ -58,12 +61,40 @@ export class EditUserModalComponent implements OnInit {
       this._groupService.checkGroupNumber(this.editedUser.groupNumber).subscribe((result: boolean) => {
         if (!result)
           this.groupNumberFormControl.setErrors({ incorrect: true });
-        else if(this.groupNumberFormControl.errors!=null)
-          this.groupNumberFormControl.errors["incorrect"]=null;
+        else if (this.groupNumberFormControl.invalid)
+          this.groupNumberFormControl.errors['incorrect'] = null;
+        else
+          this._groupService.getGroupByNumber(this.editedUser.groupNumber).subscribe((result: Group) => {
+            this.currentGroup = result;
+          })
       });
   }
 
+  checkRole() {
+    if (this.currentGroup) {
+      if ((this.roleNameFormControl.value == "GroupHeadman" && this.currentGroup.headStudentId != null && this.editedUser.roleName != this.firstRole) ||
+        (this.roleNameFormControl.value == "SpecialityHeadman" && this.currentGroup.speciality.headStudentId != null && this.editedUser.roleName != this.firstRole))
+        this.roleNameFormControl.setErrors({ alreadyExist: true });
+      else if (this.roleNameFormControl.invalid)
+        this.roleNameFormControl.errors['alreadyExist'] = null;
+    }
+    else if (this.roleNameFormControl.invalid)
+      this.roleNameFormControl.errors['alreadyExist'] = null;
+  }
+
   ngOnInit() {
+    this.firstRole = this.editedUser.roleName;
+    this.roleNameFormControl.setValue(this.firstRole);
+    this._groupService.checkGroupNumber(this.editedUser.groupNumber).subscribe((result: boolean) => {
+      if (!result)
+        this.groupNumberFormControl.setErrors({ incorrect: true });
+      else if (this.groupNumberFormControl.invalid)
+        this.groupNumberFormControl.errors['incorrect'] = null;
+      else
+        this._groupService.getGroupByNumber(this.editedUser.groupNumber).subscribe((result: Group) => {
+          this.currentGroup = result;
+        })
+    });
   }
 
 }

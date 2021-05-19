@@ -16,6 +16,7 @@ namespace Domain.Impl.Models.Response
         public string UserFirstName { get; set; }
         public string UserLastName { get; set; }
         public string UserMiddleName { get; set; }
+        public string RoleName { get; set; }
         public virtual GroupModel Group { get; set; }
         public virtual SpecialityModel Speciality { get; set; }
     }

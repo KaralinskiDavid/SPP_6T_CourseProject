@@ -7,6 +7,8 @@ using Dao.Impl.DaoModels;
 using Dao;
 using Domain.Impl.Models.Response;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Dto.Identity;
 
 namespace Service.Impl
 {
@@ -16,23 +18,38 @@ namespace Service.Impl
         private readonly IBsuirIisApiService _bsuirIisApiService;
         private readonly IGroupDao<Group> _groupDao;
         private readonly ISpecialityDao<Speciality> _specialityDao;
+        private readonly UserManager<LearningAssistantUser> _userManager;
         
         public GroupService(IMapper mapper, IBsuirIisApiService bsuirIisApiService, IGroupDao<Group> groupDao,
-            ISpecialityDao<Speciality> specialityDao)
+            ISpecialityDao<Speciality> specialityDao, UserManager<LearningAssistantUser> userManager)
         {
             _mapper = mapper;
             _bsuirIisApiService = bsuirIisApiService;
             _groupDao = groupDao;
             _specialityDao = specialityDao;
+            _userManager = userManager;
         }
 
         public async Task<bool> CheckGroupNumber(string groupNumber) => (await _groupDao.GetGroupByNumber(groupNumber)) != null;
 
+        public async Task<GetGroupResponseModel> GetGroupByNumber(string groupNumber) => _mapper.Map<GetGroupResponseModel>(await _groupDao.GetGroupByNumber(groupNumber));
+
         public async Task<List<GetGroupResponseModel>> GetGroups()
         {
-            var groups = await (await _groupDao.GetItemsAsync()).Include(g => g.Student).Include(g => g.Students).Include(g => g.Speciality).Include(s => s.Speciality.Faculty)
+            var groups = await (await _groupDao.GetItemsAsync()).Include(g => g.Student).Include(g => g.Students).Include(g => g.Speciality).ThenInclude(s => s.Faculty)
                 .ToListAsync();
-            return _mapper.Map<List<GetGroupResponseModel>>(groups);
+            var models = _mapper.Map<List<GetGroupResponseModel>>(groups);
+            foreach (var group in models.Where(g => g.HeadStudentId != null))
+            {
+                var user = await _userManager.FindByIdAsync(group.Student.UserId);
+                group.HeadStudentName = user.LastName + " " + user.FirstName;
+            }
+            foreach (var group in models.Where(g => g.Speciality.HeadStudentId != null))
+            {
+                var user = await _userManager.FindByIdAsync(group.Speciality.HeadStudent.UserId);
+                group.Speciality.HeadStudentName = user.LastName + " " + user.FirstName;
+            }
+            return models;
         }
 
         public async Task<bool> RefreshGroups()

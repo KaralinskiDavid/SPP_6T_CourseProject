@@ -44,7 +44,7 @@ export class QueueEditorComponent implements OnInit {
   }
 
   loadStudents() {
-    this._studentService.getStudentsByGroupNumber(this.groupNumber).subscribe((result: any) => {
+    this._studentService.getStudentsByGroupNumber(this.groupNumber).subscribe((result: Student[]) => {
       this.students = result;
     },
       error => {
@@ -77,14 +77,20 @@ export class QueueEditorComponent implements OnInit {
     this._queueService.createQueue(queue).subscribe((result: boolean) => {
       this.toastr.success("Created");
       this.showTable.emit();
+      this.loadStudents();
+      this.queue.splice(0, this.queue.length);
     },
       error => {
+        this.loadStudents();
+        this.queue.splice(0, this.queue.length);
         this.toastr.error("Something went wrong");
       }
     );
   }
 
   onCancelClicked() {
+    this.loadStudents();
+    this.queue.splice(0, this.queue.length);
     this.showTable.emit();
   }
 

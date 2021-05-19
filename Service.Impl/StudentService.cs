@@ -74,6 +74,7 @@ namespace Service.Impl
                     responseModel.Group = _mapper.Map<GroupModel>(student.Group);
                     responseModel.Speciality = _mapper.Map<SpecialityModel>(student.Group.Speciality);
                     responseModel.SubGroup = student.SubGroup;
+                    responseModel.RoleName = (await _userManager.GetRolesAsync(user)).FirstOrDefault();
                     result.Add(responseModel);
                 }
             }

@@ -7,6 +7,7 @@ import { ErrorStateMatcher } from '@angular/material/core';
 import { Router } from '@angular/router';
 import { User } from '../classes/user';
 import { GroupService } from '../services/group.service';
+import { Group } from '../classes/iismodels';
 
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
@@ -30,6 +31,7 @@ export class AddUserModal implements OnInit {
     private _groupService: GroupService, public toastr: ToastrService) {
   }
   createdUser: User;
+  currentGroup: Group;
 
 
   roles: Role[] = [
@@ -92,9 +94,25 @@ export class AddUserModal implements OnInit {
       this._groupService.checkGroupNumber(this.createdUser.groupNumber).subscribe((result: boolean) => {
         if (!result)
           this.groupNumberFormControl.setErrors({ incorrect: true });
-        else
+        else if(this.groupNumberFormControl.invalid)
           this.groupNumberFormControl.errors['incorrect'] = null;
+        else
+          this._groupService.getGroupByNumber(this.createdUser.groupNumber).subscribe((result: Group) => {
+            this.currentGroup = result;
+          })
       });
+  }
+
+  checkRole() {
+    if (this.currentGroup) {
+      if ((this.roleNameFormControl.value == "GroupHeadman" && this.currentGroup.headStudentId != null) ||
+        (this.roleNameFormControl.value == "SpecialityHeadman" && this.currentGroup.speciality.headStudentId != null))
+        this.roleNameFormControl.setErrors({ alreadyExist: true });
+      else if (this.roleNameFormControl.invalid)
+        this.roleNameFormControl.errors['alreadyExist'] = null;
+    }
+    else if (this.roleNameFormControl.invalid)
+      this.roleNameFormControl.errors['alreadyExist'] = null;
   }
 
   ngOnInit() {

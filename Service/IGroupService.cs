@@ -10,6 +10,7 @@ namespace Service
     {
         public Task<bool> RefreshGroups();
         public Task<List<GetGroupResponseModel>> GetGroups();
+        public Task<GetGroupResponseModel> GetGroupByNumber(string groupNumber);
         public Task<bool> CheckGroupNumber(string groupNumber);
     }
 }

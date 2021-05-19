@@ -25,6 +25,15 @@ import { MatButtonModule } from '@angular/material/button';
 import { AddQueueModalComponent } from './add-queue-modal/add-queue-modal.component';
 import { MatListModule } from '@angular/material/list';
 import { UserTabsComponent } from './user-tabs/user-tabs.component';
+import { AuthGuard } from './guards/auth.guard';
+import { LoginGuard } from './guards/login.guard';
+import { AdminGuard } from './guards/admin.guard';
+import { UserGuard } from './guards/user.guard';
+import { JwtModule } from '@auth0/angular-jwt';
+import { SpecialityFilesComponent } from './speciality-files/speciality-files.component';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { AddSectionModalComponent } from './add-section-modal/add-section-modal.component';
+import { NgxDropzoneModule } from 'ngx-dropzone';
 
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
@@ -46,27 +55,44 @@ const DragConfig = {
   zIndex: 10000
 };
 
+export function tokenGetter() {
+  return localStorage.getItem('access_token');
+}
+
+
+
+const roleRoutes: Routes = [
+  {
+    path: 'user',
+    component: UserTabsComponent,
+    canActivate: [UserGuard]
+  },
+  {
+    path: 'admin',
+    component: AdminTabsComponent,
+    canActivate: [AdminGuard]
+  }
+];
+ 
 const appRoutes: Routes = [
   {
-    path: '',
-    component: LoginComponent,
-  },
-  {
     path: 'login',
-    component: LoginComponent,
+    component: LoginComponent
   },
   {
-    path: "register",
-    component: RegisterComponent,
+    path: 'register',
+    component: RegisterComponent
   },
   {
-    path: "admin",
-    component: AdminTabsComponent,
+    path: '',
+    component: HomeComponent,
+    children: roleRoutes,
+    canActivate: [AuthGuard]
   },
   {
-    path: "user",
-    component: UserTabsComponent,
-  },
+    path: '**',
+    redirectTo: ''
+  }
 ];
 
 @NgModule({
@@ -89,9 +115,18 @@ const appRoutes: Routes = [
     EditUserModalComponent,
     AddQueueModalComponent,
     UserTabsComponent,
+    SpecialityFilesComponent,
+    AddSectionModalComponent,
   ],
   imports: [
     BrowserModule,
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: tokenGetter,
+        skipWhenExpired: true
+        // whitelistedDomains: ['localhost:5001'],
+      }
+    }),
     BrowserAnimationsModule,
     HttpClientModule,
     FormsModule,
@@ -115,9 +150,11 @@ const appRoutes: Routes = [
     DragDropModule,
     MatButtonModule,
     MatListModule,
+    MatExpansionModule,
+    NgxDropzoneModule,
   ],
   providers: [{ provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }, { provide: CDK_DRAG_CONFIG, useValue: DragConfig }],
-  entryComponents: [AddUserModal, ConfirmDeleteModalComponent, EditUserModalComponent, AddQueueModalComponent],
+  entryComponents: [AddUserModal, ConfirmDeleteModalComponent, EditUserModalComponent, AddQueueModalComponent, AddSectionModalComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

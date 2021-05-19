@@ -41,8 +41,12 @@
 
   <ItemGroup>
     <None Remove="ClientApp\src\app\guards\admin.guard.ts" />
+    <None Remove="ClientApp\src\app\guards\auth.guard.ts" />
     <None Remove="ClientApp\src\app\guards\login.guard.ts" />
+    <None Remove="ClientApp\src\app\guards\user.guard.ts" />
     <None Remove="ClientApp\src\app\helpers\error.interceptor.ts" />
+    <None Remove="ClientApp\src\app\services\file-section.service.ts" />
+    <None Remove="ClientApp\src\app\services\file.service.ts" />
     <None Remove="ClientApp\src\app\services\group.service.ts" />
     <None Remove="ClientApp\src\app\services\queue.service.ts" />
     <None Remove="ClientApp\src\app\services\schedule.service.ts" />
@@ -59,8 +63,12 @@
 
   <ItemGroup>
     <TypeScriptCompile Include="ClientApp\src\app\guards\admin.guard.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\guards\auth.guard.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\guards\login.guard.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\guards\user.guard.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\helpers\error.interceptor.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\services\file-section.service.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\services\file.service.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\services\group.service.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\services\queue.service.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\services\schedule.service.ts" />

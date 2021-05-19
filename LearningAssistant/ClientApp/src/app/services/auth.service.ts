@@ -7,25 +7,36 @@ import { User } from '../classes/user';
 })
 export class AuthService {
 
-  private url = "/api/auth";
+  private urla = "/api/auth";
+
+  private redirectURL: string = "";
+
+  public set url(value: string) {
+    this.redirectURL = value;
+  }
+
+  public get url() {
+    return this.redirectURL;
+  }
 
   constructor(private http: HttpClient) { }
 
   signIn(email: string, password: string) {
     const user = { email: email, password: password };
-    return this.http.post(this.url + '/login', user);
+    return this.http.post(this.urla + '/login', user);
   }
 
   signUp(user: User) {
-    return this.http.post(this.url + '/register', user);
+    return this.http.post(this.urla + '/register', user);
   }
 
   checkEmail(email: string) {
-    return this.http.get(this.url + '/check/' + email);
+    return this.http.get(this.urla + '/check/' + email);
   }
 
   refreshToken(token: string) {
-    return this.http.post(this.url + "/refresh/" + token, null);
+    const rToken = { refreshToken: token };
+    return this.http.post(this.urla + "/refresh", rToken);
   }
 
 }

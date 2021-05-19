@@ -22,10 +22,19 @@ namespace LearningAssistant.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles ="Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<List<GetGroupResponseModel>>> GetGroups()
         {
             var result = await _groupService.GetGroups();
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Authorize(Roles="Admin, GroupHeadman, SpecialityHeadman, Student")]
+        [Route("{groupNumber}")]
+        public async Task<ActionResult<GetGroupResponseModel>> GetGroupByNumber([FromRoute] string groupNumber)
+        {
+            var result = await _groupService.GetGroupByNumber(groupNumber);
             return Ok(result);
         }
 

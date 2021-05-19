@@ -10,6 +10,6 @@ namespace Dao.Impl
     {
         public SpecialityDao(DaoContext context) : base(context) { }
 
-        public override async Task<Speciality> GetItemByIdAsync(int id) => await _context.Specialities.FirstOrDefaultAsync(i => i.Id == id);
+        public override async Task<Speciality> GetItemByIdAsync(int id) => await _context.Specialities.Include(s=>s.SpecialityFileSections).ThenInclude(sfs=>sfs.SpecialityFiles).FirstOrDefaultAsync(i => i.Id == id);
     }
 }

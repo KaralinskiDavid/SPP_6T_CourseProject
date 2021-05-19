@@ -1,0 +1,22 @@
+<div class="modal-header">
+  <h4 class="modal-title" id="modal-title">Create section</h4>
+  <button type="button" class="btn-close" aria-describedby="modal-title" (click)="modal.dismiss('Cross click')">
+  </button>
+</div>
+<div class="modal-body">
+  <form class="example-form">
+          <mat-form-field class="example-full-width">
+            <input matInput placeholder="Name" [formControl]="nameFormControl"
+                   [errorStateMatcher]="matcher" [(ngModel)]="name">
+            <mat-error *ngIf="nameFormControl.hasError('required')">
+              Email is <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss('Cancel')">Cancel</button>
+  <button type="button" class="btn btn-outline-dark" (click)="modal.close(name)" [disabled]="nameFormControl.invalid">
+    Create
+  </button>
+</div>

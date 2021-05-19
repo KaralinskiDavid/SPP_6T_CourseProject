@@ -33,7 +33,7 @@
           </mat-form-field>
           <mat-form-field class="example-full-width">
             <input matInput placeholder="Group number" [formControl]="groupNumberFormControl"
-                   [errorStateMatcher]="matcher" [(ngModel)]="createdUser.groupNumber" (change)="checkGroupNumber()">
+                   [errorStateMatcher]="matcher" [(ngModel)]="createdUser.groupNumber" (change)="checkGroupNumber(); checkRole();">
             <mat-error *ngIf="!groupNumberFormControl.hasError('required')">
               Group with this number doesnt exist
             </mat-error>
@@ -43,13 +43,16 @@
           </mat-form-field>
           <mat-form-field>
             <mat-label>Role</mat-label>
-            <mat-select name="roleName" [(ngModel)]="createdUser.roleName">
+            <mat-select name="roleName" [formControl]="roleNameFormControl" [(ngModel)]="createdUser.roleName" (selectionChange)="checkRole();">
               <mat-option *ngFor="let role of roles" [value]="role.value">
                 {{role.text}}
               </mat-option>
             </mat-select>
             <mat-error *ngIf="roleNameFormControl.hasError('required')">
               Role is <strong>required</strong>
+            </mat-error>
+            <mat-error *ngIf="roleNameFormControl.hasError('alreadyExist')">
+              User with the same role in the same group/speciality already exists
             </mat-error>
           </mat-form-field>
         </div>
@@ -86,5 +89,8 @@
 </div>
 <div class="modal-footer">
   <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss('Cancel')">Cancel</button>
-  <button type="button" class="btn btn-outline-dark" (click)="modal.close(createdUser)" [disabled]="">Create</button>
+  <button type="button" class="btn btn-outline-dark" (click)="modal.close(createdUser)" [disabled]="firstNameFormControl.invalid ||
+          lastNameFormControl.invalid || middleNameFormControl.invalid || groupNumberFormControl.invalid || subGroupNumberFormControl.invalid ||
+          roleNameFormControl.invalid
+          ">Create</button>
 </div>

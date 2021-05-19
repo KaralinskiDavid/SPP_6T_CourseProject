@@ -95,7 +95,7 @@ export class UserstableComponent implements OnInit {
     user.email = student.userEmail;
     user.firstName = student.userFirstName;
     user.lastName = student.userLastName;
-    user.middleName = user.middleName;
+    user.middleName = student.userMiddleName;
     user.groupNumber = student.group.number;
     user.roleName = student.roleName;
     user.subGroup = student.subgroup;

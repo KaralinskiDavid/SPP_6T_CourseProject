@@ -5,7 +5,11 @@ namespace Dao.Impl.DaoModels
 {
     public class Speciality
     {
-        public Speciality() { Groups = new HashSet<Group>(); }
+        public Speciality() 
+        { 
+            Groups = new HashSet<Group>();
+            SpecialityFileSections = new HashSet<SpecialityFileSection>();
+        }
 
 
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
@@ -20,6 +24,7 @@ namespace Dao.Impl.DaoModels
 
         public virtual Faculty Faculty { get; set; }
         public virtual ICollection<Group> Groups { get; set; }
+        public virtual ICollection<SpecialityFileSection> SpecialityFileSections { get; set; }
         public virtual Student HeadStudent { get; set; }
     }
 }
