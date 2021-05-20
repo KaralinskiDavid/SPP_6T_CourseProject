@@ -37,8 +37,6 @@ export class ErrorInterceptor implements HttpInterceptor {
     if (!this.isRefreshingToken) {
       this.isRefreshingToken = true;
 
-      // Reset here so that the following requests wait until the token
-      // comes back from the refreshToken call.
       this.tokenSubject.next(null);
 
       let refreshToken = localStorage.getItem('refresh_token') ? localStorage.getItem('refresh_token') : '';
